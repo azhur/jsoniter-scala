@@ -7,14 +7,9 @@ import org.openjdk.jmh.annotations.Benchmark
 case class Message(message: String)
 
 class MessageBenchmark extends CommonParams {
-  val plainText: String = "Hello, World!"
-  val obj: Message = Message(plainText)
-  val jsonString: String = """{"message":"Hello, World!"}"""
-  val jsonBytes: Array[Byte] = jsonString.getBytes
+  @Benchmark
+  def getBytes(): Array[Byte] = "Hello, World!".getBytes("UTF-8")
 
   @Benchmark
-  def getBytes(): Array[Byte] = plainText.getBytes("UTF-8")
-
-  @Benchmark
-  def writeJsoniter(): Array[Byte] = JsonWriter.write(messageCodec, obj)
+  def writeJsoniter(): Array[Byte] = JsonWriter.write(messageCodec, Message("Hello, World!"))
 }
