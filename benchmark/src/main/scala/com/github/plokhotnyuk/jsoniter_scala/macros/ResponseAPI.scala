@@ -43,7 +43,7 @@ object ResponseAPI {
             dataDiscriminator = _dataType match {
               case "data1" => 1
               case "data2" => 2
-              case x => in.discriminatorValueError("dataType")
+              case _ => in.discriminatorValueError("dataType")
             }
             dataReq &= -2
             responseDiscriminator |= 4
@@ -134,10 +134,12 @@ object ResponseAPI {
     }
 
     @tailrec
-    def scanToKey(in: JsonReader, s: String): Boolean = if (!in.isCharBufEqualsTo(in.readKeyAsCharBuf(), s)) {
-      in.skip()
-      if (in.isNextToken(',')) scanToKey(in, s)
-      else false
-    } else true
+    def scanToKey(in: JsonReader, s: String): Boolean =
+      if (in.isCharBufEqualsTo(in.readKeyAsCharBuf(), s)) true
+      else {
+        in.skip()
+        if (in.isNextToken(',')) scanToKey(in, s)
+        else false
+      }
   }
 }
