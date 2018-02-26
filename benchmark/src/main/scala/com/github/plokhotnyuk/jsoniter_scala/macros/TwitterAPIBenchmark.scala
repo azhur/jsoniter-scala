@@ -11,6 +11,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros.TwitterAPI._
 import io.circe.generic.auto._
 import io.circe.parser._
 //import io.circe.syntax._
+import io.circe.jackson.jackson2
 import org.openjdk.jmh.annotations.Benchmark
 import play.api.libs.json.Json
 
@@ -19,6 +20,12 @@ class TwitterAPIBenchmark extends CommonParams {
 
   @Benchmark
   def readCirce(): Seq[Tweet] = decode[Seq[Tweet]](new String(jsonBytes, UTF_8)).fold(throw _, x => x)
+
+  @Benchmark
+  def readCirceJackson(): Seq[Tweet] = jackson2.decode[Seq[Tweet]](new String(jsonBytes, UTF_8)).fold(throw _, x => x)
+
+  @Benchmark
+  def readCirceJackson2(): Seq[Tweet] = jackson2.decodeByteArray[Seq[Tweet]](jsonBytes).fold(throw _, x => x)
 
   @Benchmark
   def readJacksonScala(): Seq[Tweet] = jacksonMapper.readValue[Seq[Tweet]](jsonBytes)
@@ -31,6 +38,14 @@ class TwitterAPIBenchmark extends CommonParams {
 /* FIXME: circe serializes empty collections
   @Benchmark
   def writeCirce(): Array[Byte] = printer.pretty(obj.asJson).getBytes(UTF_8)
+*/
+/* FIXME: circe-jackson serializes empty collections
+  @Benchmark
+  def writeCirceJackson(): Array[Byte] = jackson2.encode(obj.asJson).getBytes(UTF_8)
+*/
+/* FIXME: circe-jackson serializes empty collections
+  @Benchmark
+  def writeCirceJackson2(): Array[Byte] = jackson2.encodeByteArray(obj.asJson)
 */
   @Benchmark
   def writeJacksonScala(): Array[Byte] = jacksonMapper.writeValueAsBytes(obj)

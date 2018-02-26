@@ -10,6 +10,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros.PlayJsonFormats._
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
+import io.circe.jackson.jackson2
 import org.openjdk.jmh.annotations.Benchmark
 import play.api.libs.json.Json
 
@@ -25,6 +26,12 @@ class PrimitivesBenchmark extends CommonParams {
   def readCirce(): Primitives = decode[Primitives](new String(jsonBytes, UTF_8)).fold(throw _, x => x)
 
   @Benchmark
+  def readCirceJackson(): Primitives = jackson2.decode[Primitives](new String(jsonBytes, UTF_8)).fold(throw _, x => x)
+
+  @Benchmark
+  def readCirceJackson2(): Primitives = jackson2.decodeByteArray[Primitives](jsonBytes).fold(throw _, x => x)
+
+  @Benchmark
   def readJacksonScala(): Primitives = jacksonMapper.readValue[Primitives](jsonBytes)
 
   @Benchmark
@@ -35,6 +42,12 @@ class PrimitivesBenchmark extends CommonParams {
 
   @Benchmark
   def writeCirce(): Array[Byte] = printer.pretty(obj.asJson).getBytes(UTF_8)
+
+  @Benchmark
+  def writeCirceJackson(): Array[Byte] = jackson2.encode(obj.asJson).getBytes(UTF_8)
+
+  @Benchmark
+  def writeCirceJackson2(): Array[Byte] = jackson2.encodeByteArray(obj.asJson)
 
   @Benchmark
   def writeJacksonScala(): Array[Byte] = jacksonMapper.writeValueAsBytes(obj)

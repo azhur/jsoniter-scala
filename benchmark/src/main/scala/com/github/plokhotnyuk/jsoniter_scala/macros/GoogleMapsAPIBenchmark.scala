@@ -11,6 +11,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros.PlayJsonFormats._
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
+import io.circe.jackson.jackson2
 import org.openjdk.jmh.annotations.Benchmark
 import play.api.libs.json.Json
 
@@ -19,6 +20,12 @@ class GoogleMapsAPIBenchmark extends CommonParams {
 
   @Benchmark
   def readCirce(): DistanceMatrix = decode[DistanceMatrix](new String(jsonBytes, UTF_8)).fold(throw _, x => x)
+
+  @Benchmark
+  def readCirceJackson(): DistanceMatrix = jackson2.decode[DistanceMatrix](new String(jsonBytes, UTF_8)).fold(throw _, x => x)
+
+  @Benchmark
+  def readCirceJackson2(): DistanceMatrix = jackson2.decodeByteArray[DistanceMatrix](jsonBytes).fold(throw _, x => x)
 
   @Benchmark
   def readJacksonScala(): DistanceMatrix = jacksonMapper.readValue[DistanceMatrix](jsonBytes)
@@ -31,6 +38,12 @@ class GoogleMapsAPIBenchmark extends CommonParams {
 
   @Benchmark
   def writeCirce(): Array[Byte] = printer.pretty(obj.asJson).getBytes(UTF_8)
+
+  @Benchmark
+  def writeCirceJackson(): Array[Byte] = jackson2.encode(obj.asJson).getBytes(UTF_8)
+
+  @Benchmark
+  def writeCirceJackson2(): Array[Byte] = jackson2.encodeByteArray(obj.asJson)
 
   @Benchmark
   def writeJacksonScala(): Array[Byte] = jacksonMapper.writeValueAsBytes(obj)

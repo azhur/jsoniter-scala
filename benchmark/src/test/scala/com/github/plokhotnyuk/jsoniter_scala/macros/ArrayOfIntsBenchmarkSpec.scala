@@ -6,12 +6,16 @@ class ArrayOfIntsBenchmarkSpec extends BenchmarkSpecBase {
   "ArrayOfIntsBenchmark" should {
     "deserialize properly" in {
       benchmark.readCirce().deep shouldBe benchmark.obj.deep
+      benchmark.readCirceJackson().deep shouldBe benchmark.obj.deep
+      benchmark.readCirceJackson2().deep shouldBe benchmark.obj.deep
       benchmark.readJacksonScala().deep shouldBe benchmark.obj.deep
       benchmark.readJsoniterScala().deep shouldBe benchmark.obj.deep
       benchmark.readPlayJson().deep shouldBe benchmark.obj.deep
     }
     "serialize properly" in {
       toString(benchmark.writeCirce()) shouldBe benchmark.jsonString
+      toString(benchmark.writeCirceJackson()) shouldBe benchmark.jsonString
+      toString(benchmark.writeCirceJackson2()) shouldBe benchmark.jsonString
       toString(benchmark.writeJacksonScala()) shouldBe benchmark.jsonString
       toString(benchmark.writeJsoniterScala()) shouldBe benchmark.jsonString
       toString(benchmark.preallocatedBuf, benchmark.writeJsoniterScalaPrealloc()) shouldBe benchmark.jsonString

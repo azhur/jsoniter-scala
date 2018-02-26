@@ -128,6 +128,7 @@ lazy val benchmark = project
       "io.circe" %% "circe-generic-extras" % "0.9.1",
       "io.circe" %% "circe-parser" % "0.9.1",
       "io.circe" %% "circe-java8" % "0.9.1",
+      "io.circe" %% "circe-jackson29" % "0.9.0",
       "ai.x" %% "play-json-extensions" % "0.10.0",
       "com.typesafe.play" %% "play-json" % "2.6.8",
       "org.julienrf" %% "play-json-derived-codecs" % "4.0.0",

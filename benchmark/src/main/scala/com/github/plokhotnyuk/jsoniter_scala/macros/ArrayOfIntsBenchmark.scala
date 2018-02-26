@@ -8,6 +8,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros.JacksonSerDesers._
 import com.github.plokhotnyuk.jsoniter_scala.macros.JsoniterCodecs._
 import io.circe.parser._
 import io.circe.syntax._
+import io.circe.jackson.jackson2
 import org.openjdk.jmh.annotations.Benchmark
 import play.api.libs.json.Json
 
@@ -20,6 +21,12 @@ class ArrayOfIntsBenchmark extends CommonParams {
   def readCirce(): Array[Int] = decode[Array[Int]](new String(jsonBytes, UTF_8)).fold(throw _, x => x)
 
   @Benchmark
+  def readCirceJackson(): Array[Int] = jackson2.decode[Array[Int]](new String(jsonBytes, UTF_8)).fold(throw _, x => x)
+
+  @Benchmark
+  def readCirceJackson2(): Array[Int] = jackson2.decodeByteArray[Array[Int]](jsonBytes).fold(throw _, x => x)
+
+  @Benchmark
   def readJacksonScala(): Array[Int] = jacksonMapper.readValue[Array[Int]](jsonBytes)
 
   @Benchmark
@@ -30,6 +37,12 @@ class ArrayOfIntsBenchmark extends CommonParams {
 
   @Benchmark
   def writeCirce(): Array[Byte] = printer.pretty(obj.asJson).getBytes(UTF_8)
+
+  @Benchmark
+  def writeCirceJackson(): Array[Byte] = jackson2.encode(obj.asJson).getBytes(UTF_8)
+
+  @Benchmark
+  def writeCirceJackson2(): Array[Byte] = jackson2.encodeByteArray(obj.asJson)
 
   @Benchmark
   def writeJacksonScala(): Array[Byte] = jacksonMapper.writeValueAsBytes(obj)

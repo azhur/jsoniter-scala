@@ -10,6 +10,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros.JsoniterCodecs._
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
+import io.circe.jackson.jackson2
 import org.openjdk.jmh.annotations.Benchmark
 import play.api.libs.json.Json
 
@@ -24,6 +25,12 @@ class AnyRefsBenchmark extends CommonParams {
   def readCirce(): AnyRefs = decode[AnyRefs](new String(jsonBytes, UTF_8)).fold(throw _, x => x)
 
   @Benchmark
+  def readCirceJackson(): AnyRefs = jackson2.decode[AnyRefs](new String(jsonBytes, UTF_8)).fold(throw _, x => x)
+
+  @Benchmark
+  def readCirceJackson2(): AnyRefs = jackson2.decodeByteArray[AnyRefs](jsonBytes).fold(throw _, x => x)
+
+  @Benchmark
   def readJacksonScala(): AnyRefs = jacksonMapper.readValue[AnyRefs](jsonBytes)
 
   @Benchmark
@@ -34,6 +41,12 @@ class AnyRefsBenchmark extends CommonParams {
 
   @Benchmark
   def writeCirce(): Array[Byte] = printer.pretty(obj.asJson).getBytes(UTF_8)
+
+  @Benchmark
+  def writeCirceJackson(): Array[Byte] = jackson2.encode(obj.asJson).getBytes(UTF_8)
+
+  @Benchmark
+  def writeCirceJackson2(): Array[Byte] = jackson2.encodeByteArray(obj.asJson)
 
   @Benchmark
   def writeJacksonScala(): Array[Byte] = jacksonMapper.writeValueAsBytes(obj)
