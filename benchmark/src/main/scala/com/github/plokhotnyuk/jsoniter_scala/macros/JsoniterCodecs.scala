@@ -1,10 +1,10 @@
 package com.github.plokhotnyuk.jsoniter_scala.macros
 
 import java.time._
-import java.util.UUID
+import java.util.{Base64, UUID}
 
-import com.github.plokhotnyuk.jsoniter_scala.core.{JsonValueCodec, ReaderConfig}
-import com.github.plokhotnyuk.jsoniter_scala.macros.JsonCodecMaker.make
+import com.github.plokhotnyuk.jsoniter_scala.core.{JsonReader, JsonValueCodec, JsonWriter, ReaderConfig}
+import com.github.plokhotnyuk.jsoniter_scala.macros.JsonCodecMaker._
 import com.github.plokhotnyuk.jsoniter_scala.macros.SuitEnum.SuitEnum
 
 object JsoniterCodecs {
@@ -47,7 +47,27 @@ object JsoniterCodecs {
   implicit val primitivesCodec: JsonValueCodec[Primitives] = make[Primitives](CodecMakerConfig())
   implicit val extractFieldsCodec: JsonValueCodec[ExtractFields] = make[ExtractFields](CodecMakerConfig())
   implicit val adtCodec: JsonValueCodec[AdtBase] = make[AdtBase](CodecMakerConfig())
+  implicit val listOfAdtWithBase64Codec: JsonValueCodec[List[DocumentAttribute]] = {
+    implicit val base64Codec: Base64Codec = new Base64Codec()
+    make[List[DocumentAttribute]](CodecMakerConfig(
+      fieldNameMapper = enforce_snake_case,
+      adtLeafClassNameMapper = x => simpleClassName(x) match {
+        case "DAAudio" => "da_audio"
+        case "DAFilename" => "da_filename"
+      },
+      discriminatorFieldName = "kind"))
+  }
   implicit val stringCodec: JsonValueCodec[String] = make[String](CodecMakerConfig())
   implicit val googleMapsAPICodec: JsonValueCodec[DistanceMatrix] = make[DistanceMatrix](CodecMakerConfig())
   implicit val twitterAPICodec: JsonValueCodec[Seq[Tweet]] = make[Seq[Tweet]](CodecMakerConfig())
+}
+
+class Base64Codec extends JsonValueCodec[Array[Byte]] {
+  override def decodeValue(in: JsonReader, default: Array[Byte]): Array[Byte] =
+    Base64.getDecoder.decode(in.readString())
+
+  override def encodeValue(x: Array[Byte], out: JsonWriter): Unit =
+    out.writeNonEscapedAsciiVal(Base64.getEncoder.encodeToString(x))
+
+  override val nullValue: Array[Byte] = new Array[Byte](0)
 }
