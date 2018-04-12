@@ -1594,7 +1594,7 @@ final class JsonCodecThings extends JsonValueCodec[io.crossref.ItemResponse] {
     var _link: Seq[io.crossref.Link] = Seq.empty[io.crossref.Link];
     var `_clinical-trial-number`: Seq[io.crossref.ClinicalTrialNumber] = Seq.empty[io.crossref.ClinicalTrialNumber];
     var `_alternative-id`: Option[String] = None;
-    var _reference: Seq[io.crossref.Reference] = Publication.`<init>$default$48`;
+    var _reference: Seq[io.crossref.Reference] = Seq.empty[io.crossref.Reference];
     var `_content-domain`: Option[io.crossref.ContentDomain] = None;
     var _relation: Option[Map[String, io.crossref.Relation]] = None;
     var _score: Double = 0.0;
@@ -2083,7 +2083,7 @@ final class JsonCodecThings extends JsonValueCodec[io.crossref.ItemResponse] {
       in.requiredFieldError(r2(Integer.numberOfTrailingZeros(p1).+(32)))
     else
       ();
-    new io.crossref.Publication(publisher = _publisher, title = _title, `original-title` = `_original-title`, `short-title` = `_short-title`, `abstract` = _abstract, referenceCount = _referenceCount, `references-count` = `_references-count`, `is-referenced-by-count` = `_is-referenced-by-count`, source = _source, prefix = _prefix, DOI = _DOI, URL = _URL, member = _member, `type` = _type, created = _created, deposited = _deposited, indexed = _indexed, issued = _issued, posted = _posted, accepted = _accepted, subtitle = _subtitle, `container-title` = `_container-title`, `short-container-title` = `_short-container-title`, `group-title` = `_group-title`, issue = _issue, volume = _volume, page = _page, `article-number` = `_article-number`, `published-print` = `_published-print`, `published-online` = `_published-online`, subject = _subject, ISSN = _ISSN, `issn-type` = `_issn-type`, ISBN = _ISBN, archive = _archive, license = _license, funder = _funder, assertion = _assertion, author = _author, editor = _editor, chair = _chair, translator = _translator, `update-to` = `_update-to`, `update-policy` = `_update-policy`, link = _link, `clinical-trial-number` = `_clinical-trial-number`, `alternative-id` = `_alternative-id`, reference = _reference, `content-domain` = `_content-domain`, relation = _relation, score = _score)
+    new io.crossref.Publication(publisher = _publisher, title = _title, `original-title` = `_original-title`, `short-title` = `_short-title`, `abstract` = _abstract, `reference-count` = _referenceCount, `references-count` = `_references-count`, `is-referenced-by-count` = `_is-referenced-by-count`, source = _source, prefix = _prefix, DOI = _DOI, URL = _URL, member = _member, `type` = _type, created = _created, deposited = _deposited, indexed = _indexed, issued = _issued, posted = _posted, accepted = _accepted, subtitle = _subtitle, `container-title` = `_container-title`, `short-container-title` = `_short-container-title`, `group-title` = `_group-title`, issue = _issue, volume = _volume, page = _page, `article-number` = `_article-number`, `published-print` = `_published-print`, `published-online` = `_published-online`, subject = _subject, ISSN = _ISSN, `issn-type` = `_issn-type`, ISBN = _ISBN, archive = _archive, license = _license, funder = _funder, assertion = _assertion, author = _author, editor = _editor, chair = _chair, translator = _translator, `update-to` = `_update-to`, `update-policy` = `_update-policy`, link = _link, `clinical-trial-number` = `_clinical-trial-number`, `alternative-id` = `_alternative-id`, reference = _reference, `content-domain` = `_content-domain`, relation = _relation, score = _score)
   }
   else
     in.readNullOrTokenError(default, '{');
@@ -3079,7 +3079,7 @@ final class JsonCodecThings extends JsonValueCodec[io.crossref.ItemResponse] {
     };
     {
       out.writeNonEscapedAsciiKey("reference-count");
-      out.writeVal(x.referenceCount)
+      out.writeVal(x.`reference-count`)
     };
     {
       out.writeNonEscapedAsciiKey("references-count");
@@ -3392,7 +3392,7 @@ final class JsonCodecThings extends JsonValueCodec[io.crossref.ItemResponse] {
     };
     {
       val v = x.reference;
-      if (v.isEmpty.`unary_!`.&&(v.!=(Publication.`<init>$default$48`))) {
+      if (v.isEmpty.`unary_!`) {
         out.writeNonEscapedAsciiKey("reference");
         e31(v, out)
       }

@@ -80,7 +80,6 @@ case class Publication(publisher: String,
                        `original-title`: Seq[String],
                        `short-title`: Seq[String],
                        `abstract`: Option[String],
-                       @named("reference-count") referenceCount: Int,
                        `references-count`: Int,
                        `is-referenced-by-count`: Int,
                        source: String,
@@ -125,6 +124,7 @@ case class Publication(publisher: String,
                        reference: Seq[Reference] = Seq.empty[Reference],
                        `content-domain`: Option[ContentDomain],
                        relation: Option[Map[String, Relation]],
+                       `reference-count`: Int,
                        score: Double)
 
 case class Query(`start-index`: Int, `search-terms`: Option[String])
