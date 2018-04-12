@@ -1,5 +1,7 @@
 package io.crossref
 
+import com.github.plokhotnyuk.jsoniter_scala.macros.named
+
 case class DateParts(`date-parts`: Array[Array[Int]], `date-time`: String, timestamp: Long)
 
 case class PartialDate(`date-parts`: Array[Array[Int]])
@@ -78,7 +80,7 @@ case class Publication(publisher: String,
                        `original-title`: Seq[String],
                        `short-title`: Seq[String],
                        `abstract`: Option[String],
-                       `reference-count`: Int,
+                       @named("reference-count") referenceCount: Int,
                        `references-count`: Int,
                        `is-referenced-by-count`: Int,
                        source: String,

@@ -12,7 +12,7 @@ class CrossrefSpec extends WordSpec with Matchers {
         `original-title` = Nil,
         `short-title` = Nil,
         `abstract` = None,
-        `reference-count` = 1,
+        referenceCount = 1,
         `references-count` = 1,
         `is-referenced-by-count` = 1,
         source = "",
