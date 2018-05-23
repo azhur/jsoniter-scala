@@ -6,15 +6,16 @@ object ProcessedAPI {
 
     def decodeValue(in: JsonReader, default: Unit): Unit =
       if (in.isNextToken('{')) {
-        in.skipToKey("result")
-        if (in.isNextToken('[')) {
-          if (!in.isNextToken(']')) {
-            in.rollbackToken()
-            do handler(in.readString(null))
-            while (in.isNextToken(','))
-            if (!in.isCurrentToken(']')) in.arrayEndOrCommaError()
-          }
-        } else in.readNullOrTokenError((), '[')
+        if (in.skipToKey("result")) {
+          if (in.isNextToken('[')) {
+            if (!in.isNextToken(']')) {
+              in.rollbackToken()
+              do handler(in.readString(null))
+              while (in.isNextToken(','))
+              if (!in.isCurrentToken(']')) in.arrayEndOrCommaError()
+            }
+          } else in.readNullOrTokenError((), '[')
+        }
       } else in.readNullOrTokenError((), '{')
 
     def encodeValue(x: Unit, out: JsonWriter): Unit = ???
